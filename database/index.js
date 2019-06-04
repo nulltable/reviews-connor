@@ -22,6 +22,40 @@ const makeQuery = (client, sql, callback) => {
     });
 };
 
+// Reviews Handlers
+
+module.exports.createReviews = (reviews, restaurantId, callback) => {
+  const client = new Client({
+    user: dbconf.role,
+    host: dbconf.host,
+    database: 'reviews',
+    password: dbconf.password,
+    port: 5432
+  });
+
+  const sql = `SELECT 
+    reviews.id, 
+    reviews.restaurant,
+    reviews.text,
+    reviews.date,
+    reviews.overall,
+    reviews.food,
+    reviews.service,
+    reviews.ambience,
+    reviews.wouldrecommend,
+    reviews.tags,
+    diners.firstname,
+    diners.lastname,
+    diners.city,
+    diners.avatarcolor,
+    diners.isvip,
+    diners.totalreviews
+    from reviews INNER JOIN diners 
+    on (reviews.diner = diners.id) 
+    where reviews.restaurant = ${restaurantId}`;
+
+  makeQuery(client, sql, callback);
+};
 module.exports.getAllReviews = (restaurantId, callback) => {
   const client = new Client({
     user: dbconf.role,
@@ -55,7 +89,147 @@ module.exports.getAllReviews = (restaurantId, callback) => {
   makeQuery(client, sql, callback);
 };
 
+module.exports.updateReviews = (reviews, restaurantId, callback) => {
+  const client = new Client({
+    user: dbconf.role,
+    host: dbconf.host,
+    database: 'reviews',
+    password: dbconf.password,
+    port: 5432
+  });
+
+  const sql = `SELECT 
+    reviews.id, 
+    reviews.restaurant,
+    reviews.text,
+    reviews.date,
+    reviews.overall,
+    reviews.food,
+    reviews.service,
+    reviews.ambience,
+    reviews.wouldrecommend,
+    reviews.tags,
+    diners.firstname,
+    diners.lastname,
+    diners.city,
+    diners.avatarcolor,
+    diners.isvip,
+    diners.totalreviews
+    from reviews INNER JOIN diners 
+    on (reviews.diner = diners.id) 
+    where reviews.restaurant = ${restaurantId}`;
+
+  makeQuery(client, sql, callback);
+};
+
+module.exports.deleteReviews = (restaurantId, callback) => {
+  const client = new Client({
+    user: dbconf.role,
+    host: dbconf.host,
+    database: 'reviews',
+    password: dbconf.password,
+    port: 5432
+  });
+
+  const sql = `SELECT 
+    reviews.id, 
+    reviews.restaurant,
+    reviews.text,
+    reviews.date,
+    reviews.overall,
+    reviews.food,
+    reviews.service,
+    reviews.ambience,
+    reviews.wouldrecommend,
+    reviews.tags,
+    diners.firstname,
+    diners.lastname,
+    diners.city,
+    diners.avatarcolor,
+    diners.isvip,
+    diners.totalreviews
+    from reviews INNER JOIN diners 
+    on (reviews.diner = diners.id) 
+    where reviews.restaurant = ${restaurantId}`;
+
+  makeQuery(client, sql, callback);
+};
+
+// Summary Handlers
+
+module.exports.writeSummary = (summary, restaurantId, callback) => {
+  // get restaurant summary info from restaurant table
+  const client = new Client({
+    user: dbconf.role,
+    host: dbconf.host,
+    database: 'reviews',
+    password: dbconf.password,
+    port: 5432
+  });
+  const sql = squel.select()
+    .from('restaurants')
+    .field('restaurants.location')
+    .field('restaurants.noise')
+    .field('restaurants.recommendpercent', 'recommendPercent')
+    .field('restaurants.valuerating', 'valueRating')
+    .field('restaurants.averageoverall', 'averageOverall')
+    .field('restaurants.averagefood', 'averageFood')
+    .field('restaurants.averageambience', 'averageAmbience')
+    .field('restaurants.averageservice', 'averageService')
+    .where(`id = ${restaurantId}`)
+    .toString();
+
+  makeQuery(client, sql, callback);
+};
 module.exports.getSummary = (restaurantId, callback) => {
+  // get restaurant summary info from restaurant table
+  const client = new Client({
+    user: dbconf.role,
+    host: dbconf.host,
+    database: 'reviews',
+    password: dbconf.password,
+    port: 5432
+  });
+  const sql = squel.select()
+    .from('restaurants')
+    .field('restaurants.location')
+    .field('restaurants.noise')
+    .field('restaurants.recommendpercent', 'recommendPercent')
+    .field('restaurants.valuerating', 'valueRating')
+    .field('restaurants.averageoverall', 'averageOverall')
+    .field('restaurants.averagefood', 'averageFood')
+    .field('restaurants.averageambience', 'averageAmbience')
+    .field('restaurants.averageservice', 'averageService')
+    .where(`id = ${restaurantId}`)
+    .toString();
+
+  makeQuery(client, sql, callback);
+};
+module.exports.updateSummary = (summary, restaurantId, callback) => {
+  // get restaurant summary info from restaurant table
+  const client = new Client({
+    user: dbconf.role,
+    host: dbconf.host,
+    database: 'reviews',
+    password: dbconf.password,
+    port: 5432
+  });
+  const sql = squel.select()
+    .from('restaurants')
+    .field('restaurants.location')
+    .field('restaurants.noise')
+    .field('restaurants.recommendpercent', 'recommendPercent')
+    .field('restaurants.valuerating', 'valueRating')
+    .field('restaurants.averageoverall', 'averageOverall')
+    .field('restaurants.averagefood', 'averageFood')
+    .field('restaurants.averageambience', 'averageAmbience')
+    .field('restaurants.averageservice', 'averageService')
+    .where(`id = ${restaurantId}`)
+    .toString();
+
+  makeQuery(client, sql, callback);
+};
+module.exports.deleteSummary = (restaurantId, callback) => {
   // get restaurant summary info from restaurant table
   const client = new Client({
     user: dbconf.role,
