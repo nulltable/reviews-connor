@@ -90,39 +90,12 @@ npm install
 
 #### HTTP request
 
-POST http://localhost:3010/:id/summary
-
-##### Parameters
-**id**  
-and
-**summary data**  
-
-The **id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
-The **summary data** must be in the following format
-
-##### Response
-
-If successful, this method should write data into the database in the following shape:
-
-{  
-  "location": **_string_**,  
-  "noise": **_string_**,  
-  "recommendPercent": **_integer_**,  
-  "valueRating": **_string_**,  
-  "averageOverall": **_string_**,  
-  "averageFood": **_string_**,  
-  "averageAmbience": **_string_**,  
-  "averageService": **_string_**  
-}  
-
-#### HTTP request
-
 GET http://localhost:3010/:id/summary
 
 ##### Parameters
-**id**  
+**restaurant id**  
 
-The **id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
+The **restaurant id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
 
 ##### Response
 
@@ -138,60 +111,27 @@ If successful, this method returns a response body with the following structure:
   "averageAmbience": **_string_**,  
   "averageService": **_string_**  
 }  
-#### HTTP request
-
-UPDATE http://localhost:3010/:id/summary
-
-##### Parameters
-**id**  
-and 
-**summary data**  
-
-The **id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
-The **summary data** must be in the following format
-
-##### Response
-
-If successful, this method will update a review record at a certain ID with the following structure:
-
-{  
-  "location": **_string_**,  
-  "noise": **_string_**,  
-  "recommendPercent": **_integer_**,  
-  "valueRating": **_string_**,  
-  "averageOverall": **_string_**,  
-  "averageFood": **_string_**,  
-  "averageAmbience": **_string_**,  
-  "averageService": **_string_**  
-}  
-#### HTTP request
-
-DELETE http://localhost:3010/:id/summary
-
-##### Parameters
-**id**  
-
-The **id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
-
-##### Response
-
-If successful, this method will delete a review at a certain ID
-
 
 ### Restaurant Reviews
 
 #### HTTP Request
 
-CREATE http://localhost:3010/:id/reviews
+POST http://localhost:3010/:id/reviews
 
 ##### Parameters 
-**reviews**  
+**review,**
+**restaurant id,**
+**user id,**  
 
-The **reviews** parameter should be an array with objects of the following structure:
+The **restaurant** specifies the unique id of the restaurant being queried. 
+The **user** specifires the unique id of the user being queried. 
+The **review** parameter should be an object of the following structure:
 
 ##### Response
 
-If successful, this method creates an array containing objects with the following structure:
+If successful, this method:
+1) pushes user and restaurant into respective tables (if they do not exist)
+2) pushes the review object into an array containing objects with the following structure:
 
 {  
   "id": **_integer_**,  
@@ -215,45 +155,28 @@ If successful, this method creates an array containing objects with the followin
 GET http://localhost:3010/:id/reviews
 
 ##### Parameters
-**id**   
+**restaurant id**   
 
-The **id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
+The **restaurant id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
 
 ##### Response
 
-If successful, this method returns an array containing objects with the following structure:
+If successful, this method returns an array containing objects with the previously listed structure.
 
-{  
-  "id": **_integer_**,  
-  "restaurant": **_integer_**,  
-  "diner": **_integer_**,  
-  "text": **_string_**,  
-  "date": **_date_**,  
-  "overall": **_integer_**,  
-  "food": **_integer_**,  
-  "service": **_integer_**,  
-  "ambience": **_integer_**,  
-  "wouldrecommend": **_boolean_**  
-  "tags": **_string_**,  
-  "firstname": **_string_**,  
-  "lastname": **_string_**,  
-  "city": **_string_**,  
-  "totalreviews": **_integer_**  
-}
 #### HTTP Request
 
-UPDATE http://localhost:3010/:id/reviews
+PUT http://localhost:3010/:id/reviews
 
 ##### Parameters
-**id**  
-**reviews**  
+**review id,**
+**review**  
 
-The **id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
-The **reviews** parameter should be an array with objects of the following structure:
+The **review id** parameter specifies the unique id of the review being queried. 
+The **review** parameter should be an object with of the previously listed structure:
 
 ##### Response
 
-If successful, this method update an array to contain the objects with the new reviews data.
+If successful, this method updates an object in the reviews array to contain the new review data.
 
 
 #### HTTP Request
@@ -261,10 +184,10 @@ If successful, this method update an array to contain the objects with the new r
 DELETE http://localhost:3010/:id/reviews
 
 ##### Parameters
-**id**  
+**review id**  
 
-The **id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
+The **review id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.
 
 ##### Response
 
-If successful, this method deletes an array at a the given id.
+If successful, this method deletes an objec in the reviews array at a the given id.

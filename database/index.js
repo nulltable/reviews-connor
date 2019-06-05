@@ -2,6 +2,7 @@ const { Client } = require('pg');
 const squel = require('squel');
 const dbconf = require('../config/db_config.js');
 
+// Query Handler
 
 const makeQuery = (client, sql, callback) => {
   client.connect()
@@ -22,9 +23,36 @@ const makeQuery = (client, sql, callback) => {
     });
 };
 
+// Summary Handler
+
+module.exports.getSummary = (restaurantId, callback) => {
+  // get restaurant summary info from restaurant table
+  const client = new Client({
+    user: dbconf.role,
+    host: dbconf.host,
+    database: 'reviews',
+    password: dbconf.password,
+    port: 5432
+  });
+  const sql = squel.select()
+    .from('restaurants')
+    .field('restaurants.location')
+    .field('restaurants.noise')
+    .field('restaurants.recommendpercent', 'recommendPercent')
+    .field('restaurants.valuerating', 'valueRating')
+    .field('restaurants.averageoverall', 'averageOverall')
+    .field('restaurants.averagefood', 'averageFood')
+    .field('restaurants.averageambience', 'averageAmbience')
+    .field('restaurants.averageservice', 'averageService')
+    .where(`id = ${restaurantId}`)
+    .toString();
+
+  makeQuery(client, sql, callback);
+};
+
 // Reviews Handlers
 
-module.exports.createReviews = (reviews, restaurantId, callback) => {
+module.exports.createReview = (review, restaurantId, userId, callback) => {
   const client = new Client({
     user: dbconf.role,
     host: dbconf.host,
@@ -89,7 +117,7 @@ module.exports.getAllReviews = (restaurantId, callback) => {
   makeQuery(client, sql, callback);
 };
 
-module.exports.updateReviews = (reviews, restaurantId, callback) => {
+module.exports.updateReview = (review, reviewId, callback) => {
   const client = new Client({
     user: dbconf.role,
     host: dbconf.host,
@@ -122,7 +150,7 @@ module.exports.updateReviews = (reviews, restaurantId, callback) => {
   makeQuery(client, sql, callback);
 };
 
-module.exports.deleteReviews = (restaurantId, callback) => {
+module.exports.deleteReview = (reviewId, callback) => {
   const client = new Client({
     user: dbconf.role,
     host: dbconf.host,
@@ -155,101 +183,4 @@ module.exports.deleteReviews = (restaurantId, callback) => {
   makeQuery(client, sql, callback);
 };
 
-// Summary Handlers
 
-module.exports.writeSummary = (summary, restaurantId, callback) => {
-  // get restaurant summary info from restaurant table
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
-  const sql = squel.select()
-    .from('restaurants')
-    .field('restaurants.location')
-    .field('restaurants.noise')
-    .field('restaurants.recommendpercent', 'recommendPercent')
-    .field('restaurants.valuerating', 'valueRating')
-    .field('restaurants.averageoverall', 'averageOverall')
-    .field('restaurants.averagefood', 'averageFood')
-    .field('restaurants.averageambience', 'averageAmbience')
-    .field('restaurants.averageservice', 'averageService')
-    .where(`id = ${restaurantId}`)
-    .toString();
-
-  makeQuery(client, sql, callback);
-};
-module.exports.getSummary = (restaurantId, callback) => {
-  // get restaurant summary info from restaurant table
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
-  const sql = squel.select()
-    .from('restaurants')
-    .field('restaurants.location')
-    .field('restaurants.noise')
-    .field('restaurants.recommendpercent', 'recommendPercent')
-    .field('restaurants.valuerating', 'valueRating')
-    .field('restaurants.averageoverall', 'averageOverall')
-    .field('restaurants.averagefood', 'averageFood')
-    .field('restaurants.averageambience', 'averageAmbience')
-    .field('restaurants.averageservice', 'averageService')
-    .where(`id = ${restaurantId}`)
-    .toString();
-
-  makeQuery(client, sql, callback);
-};
-module.exports.updateSummary = (summary, restaurantId, callback) => {
-  // get restaurant summary info from restaurant table
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
-  const sql = squel.select()
-    .from('restaurants')
-    .field('restaurants.location')
-    .field('restaurants.noise')
-    .field('restaurants.recommendpercent', 'recommendPercent')
-    .field('restaurants.valuerating', 'valueRating')
-    .field('restaurants.averageoverall', 'averageOverall')
-    .field('restaurants.averagefood', 'averageFood')
-    .field('restaurants.averageambience', 'averageAmbience')
-    .field('restaurants.averageservice', 'averageService')
-    .where(`id = ${restaurantId}`)
-    .toString();
-
-  makeQuery(client, sql, callback);
-};
-module.exports.deleteSummary = (restaurantId, callback) => {
-  // get restaurant summary info from restaurant table
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
-  const sql = squel.select()
-    .from('restaurants')
-    .field('restaurants.location')
-    .field('restaurants.noise')
-    .field('restaurants.recommendpercent', 'recommendPercent')
-    .field('restaurants.valuerating', 'valueRating')
-    .field('restaurants.averageoverall', 'averageOverall')
-    .field('restaurants.averagefood', 'averageFood')
-    .field('restaurants.averageambience', 'averageAmbience')
-    .field('restaurants.averageservice', 'averageService')
-    .where(`id = ${restaurantId}`)
-    .toString();
-
-  makeQuery(client, sql, callback);
-};
