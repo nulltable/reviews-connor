@@ -22,12 +22,11 @@
     "start": "node ./server/server.js",
     "add": "eslint '*/**' --ignore-path .lintignore && git add -A",
     "pg-setup": "brew install postgres && brew services start postgres && createdb reviews && psql reviews",
-    "test": "jest",
-    "dockerstart": "node ./server/server.js",
-    "write-restaurants": "node ./database/restaurantGenerator.js",
-    "write-reports": "node ./database/reportGenerator.js",
-    "write-diners": "node ./database/dinerGenerator.js",
-    "write-reviews": "node ./database/reviewGenerator.js"
+    "test": "jest --coverage",
+    "write-restaurants": "node --max-old-space-size=8192 ./database/restaurantGenerator.js",
+    "write-reports": "node --max-old-space-size=8192 ./database/reportGenerator.js",
+    "write-diners": "node --max-old-space-size=8192 ./database/dinerGenerator.js",
+    "write-reviews": "node --max-old-space-size=8192 ./database/reviewGenerator.js"
   },
   "dependencies": {
     "babel-plugin-react-css-modules": "^5.2.6",

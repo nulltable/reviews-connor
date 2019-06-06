@@ -1,3 +1,6 @@
+CREATE DATABASE reviewsDB;
+USE reviewsDB;
+
 CREATE TABLE restaurants (
   id                serial primary key unique,
   name              varchar(30),
@@ -21,16 +24,10 @@ CREATE TABLE diners (
   totalreviews  int
 );
 
-CREATE TABLE reports (
-  id            serial primary key unique,
-  text          varchar(1000),
-  foreign key (review) references reviews(id)
-);
-
 CREATE TABLE reviews (
   id              serial primary key unique,
-  restaurant      int,
-  diner           int,
+  restaurant      bigint(20) unsigned,
+  diner           bigint(20) unsigned,
   text            varchar(1000),
   date            date,
   overall         int,
@@ -41,4 +38,11 @@ CREATE TABLE reviews (
   tags            varchar(100),
   foreign key (diner) references diners(id),
   foreign key (restaurant) references restaurants(id)
+);
+
+CREATE TABLE reports (
+  id            serial primary key unique,
+  review        bigint(20) unsigned,
+  text          varchar(1000),
+  foreign key (review) references reviews(id)
 );

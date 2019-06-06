@@ -61,9 +61,6 @@ const Seed = {
   },
   writeRestaurants() {
     for (let i = 0; i < 10000000; i++) {
-        if (i % 100000 === 0) {
-            console.log(i);
-        }
       const restaurant = {};
       restaurant.name = Seed.getRandomWord();
       restaurant.location = Seed.getRandomCity().replace(/'/g, '');
