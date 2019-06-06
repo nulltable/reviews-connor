@@ -22,10 +22,10 @@
     "start": "node ./server/server.js",
     "add": "eslint '*/**' --ignore-path .lintignore && git add -A",
     "pg-setup": "brew install postgres && brew services start postgres && createdb reviews && psql reviews",
-    "seed": "node database/seed.js",
     "test": "jest",
-    "dockerstart": "node ./database/seed.js && node ./server/server.js",
+    "dockerstart": "node ./server/server.js",
     "write-restaurants": "node ./database/restaurantGenerator.js",
+    "write-reports": "node ./database/reportGenerator.js",
     "write-diners": "node ./database/dinerGenerator.js",
     "write-reviews": "node ./database/reviewGenerator.js"
   },

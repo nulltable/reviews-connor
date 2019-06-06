@@ -81,10 +81,13 @@ npm install -g webpack-cli
   - reviews=# select * from reviews;	
 
 ### Seeding
-Run the following commands:
+Generate Data:
   - npm run write-diners
   - npm run write-restaurants
   - npm run write-reviews (run 5 times)
+
+Seed Database:
+  - 
 
  ## API - MySQL and MongoDB
 

@@ -21,6 +21,12 @@ CREATE TABLE diners (
   totalreviews  int
 );
 
+CREATE TABLE reports (
+  id            serial primary key unique,
+  text          varchar(1000),
+  foreign key (review) references reviews(id)
+);
+
 CREATE TABLE reviews (
   id              serial primary key unique,
   restaurant      int,

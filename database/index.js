@@ -52,38 +52,38 @@ module.exports.getSummary = (restaurantId, callback) => {
 
 // Reviews Handlers
 
-module.exports.createReview = (review, restaurantId, userId, callback) => {
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
+// module.exports.createReview = (review, restaurantId, userId, callback) => {
+//   const client = new Client({
+//     user: dbconf.role,
+//     host: dbconf.host,
+//     database: 'reviews',
+//     password: dbconf.password,
+//     port: 5432
+//   });
 
-  const sql = `SELECT 
-    reviews.id, 
-    reviews.restaurant,
-    reviews.text,
-    reviews.date,
-    reviews.overall,
-    reviews.food,
-    reviews.service,
-    reviews.ambience,
-    reviews.wouldrecommend,
-    reviews.tags,
-    diners.firstname,
-    diners.lastname,
-    diners.city,
-    diners.avatarcolor,
-    diners.isvip,
-    diners.totalreviews
-    from reviews INNER JOIN diners 
-    on (reviews.diner = diners.id) 
-    where reviews.restaurant = ${restaurantId}`;
+//   const sql = `SELECT 
+//     reviews.id, 
+//     reviews.restaurant,
+//     reviews.text,
+//     reviews.date,
+//     reviews.overall,
+//     reviews.food,
+//     reviews.service,
+//     reviews.ambience,
+//     reviews.wouldrecommend,
+//     reviews.tags,
+//     diners.firstname,
+//     diners.lastname,
+//     diners.city,
+//     diners.avatarcolor,
+//     diners.isvip,
+//     diners.totalreviews
+//     from reviews INNER JOIN diners 
+//     on (reviews.diner = diners.id) 
+//     where reviews.restaurant = ${restaurantId}`;
 
-  makeQuery(client, sql, callback);
-};
+//   makeQuery(client, sql, callback);
+// };
 module.exports.getAllReviews = (restaurantId, callback) => {
   const client = new Client({
     user: dbconf.role,
@@ -117,70 +117,68 @@ module.exports.getAllReviews = (restaurantId, callback) => {
   makeQuery(client, sql, callback);
 };
 
-module.exports.updateReview = (review, reviewId, callback) => {
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
+// module.exports.updateReview = (review, reviewId, callback) => {
+//   const client = new Client({
+//     user: dbconf.role,
+//     host: dbconf.host,
+//     database: 'reviews',
+//     password: dbconf.password,
+//     port: 5432
+//   });
 
-  const sql = `SELECT 
-    reviews.id, 
-    reviews.restaurant,
-    reviews.text,
-    reviews.date,
-    reviews.overall,
-    reviews.food,
-    reviews.service,
-    reviews.ambience,
-    reviews.wouldrecommend,
-    reviews.tags,
-    diners.firstname,
-    diners.lastname,
-    diners.city,
-    diners.avatarcolor,
-    diners.isvip,
-    diners.totalreviews
-    from reviews INNER JOIN diners 
-    on (reviews.diner = diners.id) 
-    where reviews.restaurant = ${restaurantId}`;
+//   const sql = `SELECT 
+//     reviews.id, 
+//     reviews.restaurant,
+//     reviews.text,
+//     reviews.date,
+//     reviews.overall,
+//     reviews.food,
+//     reviews.service,
+//     reviews.ambience,
+//     reviews.wouldrecommend,
+//     reviews.tags,
+//     diners.firstname,
+//     diners.lastname,
+//     diners.city,
+//     diners.avatarcolor,
+//     diners.isvip,
+//     diners.totalreviews
+//     from reviews INNER JOIN diners 
+//     on (reviews.diner = diners.id) 
+//     where reviews.restaurant = ${restaurantId}`;
 
-  makeQuery(client, sql, callback);
-};
+//   makeQuery(client, sql, callback);
+// };
 
-module.exports.deleteReview = (reviewId, callback) => {
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
+// module.exports.deleteReview = (reviewId, callback) => {
+//   const client = new Client({
+//     user: dbconf.role,
+//     host: dbconf.host,
+//     database: 'reviews',
+//     password: dbconf.password,
+//     port: 5432
+//   });
 
-  const sql = `SELECT 
-    reviews.id, 
-    reviews.restaurant,
-    reviews.text,
-    reviews.date,
-    reviews.overall,
-    reviews.food,
-    reviews.service,
-    reviews.ambience,
-    reviews.wouldrecommend,
-    reviews.tags,
-    diners.firstname,
-    diners.lastname,
-    diners.city,
-    diners.avatarcolor,
-    diners.isvip,
-    diners.totalreviews
-    from reviews INNER JOIN diners 
-    on (reviews.diner = diners.id) 
-    where reviews.restaurant = ${restaurantId}`;
+//   const sql = `SELECT 
+//     reviews.id, 
+//     reviews.restaurant,
+//     reviews.text,
+//     reviews.date,
+//     reviews.overall,
+//     reviews.food,
+//     reviews.service,
+//     reviews.ambience,
+//     reviews.wouldrecommend,
+//     reviews.tags,
+//     diners.firstname,
+//     diners.lastname,
+//     diners.city,
+//     diners.avatarcolor,
+//     diners.isvip,
+//     diners.totalreviews
+//     from reviews INNER JOIN diners 
+//     on (reviews.diner = diners.id) 
+//     where reviews.restaurant = ${restaurantId}`;
 
-  makeQuery(client, sql, callback);
-};
-
-
+//   makeQuery(client, sql, callback);
+// };
