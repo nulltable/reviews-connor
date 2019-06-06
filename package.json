@@ -24,7 +24,10 @@
     "pg-setup": "brew install postgres && brew services start postgres && createdb reviews && psql reviews",
     "seed": "node database/seed.js",
     "test": "jest",
-    "dockerstart": "node ./database/seed.js && node ./server/server.js"
+    "dockerstart": "node ./database/seed.js && node ./server/server.js",
+    "write-restaurants": "node ./database/restaurantGenerator.js",
+    "write-diners": "node ./database/dinerGenerator.js",
+    "write-reviews": "node ./database/reviewGenerator.js"
   },
   "dependencies": {
     "babel-plugin-react-css-modules": "^5.2.6",
