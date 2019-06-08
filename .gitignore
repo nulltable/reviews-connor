@@ -35,6 +35,7 @@ config/db_config.js
 # Data files
 dinerData.csv
 restaurantData.csv
+restaurantData.csv.zip
 reviewData.csv
 reviewData1.csv.zip
 reviewData2.csv.zip

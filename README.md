@@ -53,14 +53,14 @@
 
     npm install	
 
-### Seeding MySQL (10m records)
+### Data Generation and Seeding (10m restaurants)
 Generate CSV Data:
   - npm run write-diners
   - npm run write-restaurants
   - npm run write-reviews (run 5 times while changing i and id in file)
   - npm run write-reports
 
-Seed Database (replace {data}):
+Seed MySQL Database (replace {data} and path):
   - Run schema file in MySQL shell
   - Run following command inside MySQL shell for each table (diners, reviews x 5, restaurants, reports)
   - LOAD DATA LOCAL INFILE '/Users/connorhoman/Desktop/reviews-connor/reportData.csv' 
@@ -68,6 +68,12 @@ Seed Database (replace {data}):
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
     IGNORE 1 ROWS;
+
+Seed MongoDB Database (replace {data} and path):
+  - Run following command in terminal for each table (diners, reviews x 5, restaurants, reports)
+  - mongoimport --db reviewsDB --collection {data} --type csv --headerline < /Users/connorhoman/Desktop/reviews-connor/{data}.csv
+
+### Seeding MongoDB (10m restaurants)
 
  ## API - MySQL and MongoDB
 
