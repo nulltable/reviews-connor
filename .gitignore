@@ -36,4 +36,14 @@ config/db_config.js
 dinerData.csv
 restaurantData.csv
 reviewData.csv
+reviewData1.csv.zip
+reviewData2.csv.zip
+reviewData3.csv.zip
+reviewData4.csv.zip
+reviewData5.csv.zip
+reviewData1.csv
+reviewData2.csv
+reviewData3.csv
+reviewData4.csv
+reviewData5.csv
 reportData.csv

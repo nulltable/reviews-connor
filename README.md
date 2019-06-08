@@ -18,7 +18,7 @@
 > call 'bash compose'	
 > visit port 3010 on the host IP	
 
- ### Plain Node	
+ ### Node	
 
 > Install the necessary dependencies for this module (npm install)	
 > Transpile and bundle all the components (webpack)	
@@ -30,14 +30,15 @@
  An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).	
 
 - Node 6.13.0	
-- PostgreSQL 11.2	
+- MySQL
+- MongoDB
 
  ## Deployment	
 
 - When ready to deploy, run webpack without watch mode:	
-> npm run build	
+  > npm run build	
 - Start the server:	
-> npm run start	
+  > npm run start	
 
  ## Development	
 
@@ -45,49 +46,28 @@
 
   - Globally:	
 
-npm install -g webpack	
-npm install -g webpack-cli	
+    npm install -g webpack	
+    npm install -g webpack-cli	
 
   - In this repo:	
 
- npm install	
+    npm install	
 
- ### PostgreSQL	
-
- ! If re-seeding, run: dropdb reviews	
-
-0) Homebrew is required	
-  - https://brew.sh	
-1) Install postgres	
-  - brew install postgres	
-2) Start postgres if it is not already started	
-  - brew services start postgres	
-3) Run the following commands:	
-  - createdb reviews	
-  - $ psql reviews	
-4) Run the schema file	
-  - reviews=# \i database/schema.sql	
-5) Check out the tables	
-  - reviews=# \dt	
-6) Exit the psql shell	
-  - reviews=# \q	
-7) Go to the config/localRole.example.js file	
-  - rename to 'localRole.js'	
-  - make the key equal to your local username or whatever is the username of the postgres role that created the database (run 'select * from pg_roles;' in the psql shell [psql reviews to enter the shell again] to see a list of possibilities)	
-8) Run the seed script (don't forget npm install)	
-  - npm run seed	
-9) Check if the tables populated	
-  - psql reviews	
-  - reviews=# select * from reviews;	
-
-### Seeding
-Generate Data:
+### Seeding MySQL (10m records)
+Generate CSV Data:
   - npm run write-diners
   - npm run write-restaurants
-  - npm run write-reviews (run 5 times)
+  - npm run write-reviews (run 5 times while changing i and id in file)
+  - npm run write-reports
 
-Seed Database:
-  - 
+Seed Database (replace {data}):
+  - Run schema file in MySQL shell
+  - Run following command inside MySQL shell for each table (diners, reviews x 5, restaurants, reports)
+  - LOAD DATA LOCAL INFILE '/Users/connorhoman/Desktop/reviews-connor/reportData.csv' 
+    INTO TABLE reports
+    FIELDS TERMINATED BY ',' 
+    LINES TERMINATED BY '\n'
+    IGNORE 1 ROWS;
 
  ## API - MySQL and MongoDB
 
@@ -114,7 +94,8 @@ Seed Database:
   "averageOverall": **_string_**,  	
   "averageFood": **_string_**,  	
   "averageAmbience": **_string_**,  	
-  "averageService": **_string_**  	
+  "averageService": **_string_**,
+  "capacity": **_integer_**  	
 }  	
 
  ### Restaurant Reviews	
@@ -195,4 +176,4 @@ The **review** parameter should be an object with of the previously listed struc
 
  ##### Response	
 
- If successful, this method deletes an objec in the reviews array at a the given id.
+ If successful, this method deletes an object in the reviews array at a the given id.

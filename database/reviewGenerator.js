@@ -29,8 +29,10 @@ const Seed = {
     return Seed.boolean[Math.floor(Math.random() * 2)];
   },
   writeReviews() {
+    // update id numbers by batch
     for (let i = 0; i < 20000000; i++) {
       const review = {};
+      review.id = i + 1;
       review.restaurant = Math.floor(Math.random() * 10000000);
       review.diner = Math.floor(Math.random() * 50);
       review.text = Seed.getRandomSentence();
@@ -60,8 +62,9 @@ const Seed = {
   },
 };
 
+// Change i to 1-5 while generating 100m records
 const dataGenerator = () => {
-  writer.pipe(fs.createWriteStream('reviewData2.csv', {flags: 'a'}));
+  writer.pipe(fs.createWriteStream('reviewData{i}.csv', {flags: 'a'}));
   Seed.writeReviews();
   writer.end();
   console.log("Done Writing Reviews");

@@ -16,6 +16,7 @@ const Seed = {
   writeDiners() {
     for (let i = 0; i < 50; i++) {
       const diner = {};
+      diner.id = i;
       diner.firstname = Faker.name.firstName().replace(/'/g, '');
       diner.lastname = Faker.name.lastName().replace(/'/g, '');
       diner.city = Faker.address.city().replace(/'/g, '');

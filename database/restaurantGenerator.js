@@ -62,16 +62,17 @@ const Seed = {
   writeRestaurants() {
     for (let i = 0; i < 10000000; i++) {
       const restaurant = {};
+      restaurant.id = i + 1;
       restaurant.name = Seed.getRandomWord();
       restaurant.location = Seed.getRandomCity().replace(/'/g, '');
       restaurant.noise = Seed.getRandomNoiseLevel();
-      restaurant.location = Seed.getRandomCity().replace(/'/g, '');
       restaurant.averageoverall = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.averageservice = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.averageambience = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.averagefood = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.valuerating = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.recommendpercent = Math.floor(Math.random() * 100);
+      restaurant.capacity = Math.floor(Math.random() * 16) + 8;
       writer.write(restaurant);
     }
   },

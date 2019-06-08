@@ -13,6 +13,7 @@ const Seed = {
   writeReports() {
     for (let i = 0; i < 10000; i++) {
       const report = {};
+      report.id = i + 1;
       report.review = Math.floor(Math.random() * 100000000);
       report.text = Seed.getRandomSentence();
       writer.write(report);
