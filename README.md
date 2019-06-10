@@ -68,14 +68,22 @@ Seed MySQL Database (replace {data} and path):
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
     IGNORE 1 ROWS;
+  - Index foreign keys by running:
+          ALTER TABLE reviews ADD INDEX (restaurant);
+          ALTER TABLE reviews ADD INDEX (diner);
+          ALTER TABLE reports ADD INDEX (review);
 
 Seed MongoDB Database (replace {data} and path):
   - Run following command in terminal for each table (diners, reviews x 5, restaurants, reports)
   - mongoimport --db reviewsDB --collection {data} --type csv --headerline < /Users/connorhoman/Desktop/reviews-connor/{data}.csv
+  - Index id's for each table by running (replace data):
+          db.{data}.createIndex({id: 1}); 
+  - Index foreign keys by running:
+          db.reviews.createIndex({restaurant: 1});
+          db.reviews.createIndex({diner: 1});
+          db.reports.createIndex({review: 1});
 
-### Seeding MongoDB (10m restaurants)
-
- ## API - MySQL and MongoDB
+ ## API
 
  ### Reviews Summary	
 
