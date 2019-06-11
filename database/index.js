@@ -1,38 +1,14 @@
-const { Client } = require('pg');
+const mysql = require('mysql');
 const squel = require('squel');
 const dbconf = require('../config/db_config.js');
 
-// Query Handler
-
-const makeQuery = (client, sql, callback) => {
-  client.connect()
-    .then(() => {
-      client.query(sql)
-        .then((res) => {
-          callback(null, res.rows);
-          client.end();
-        })
-        .catch((err) => {
-          callback(err);
-          client.end();
-        });
-    })
-    .catch((err) => {
-      callback(err);
-      client.end();
-    });
-};
-
-// Summary Handler
-
 module.exports.getSummary = (restaurantId, callback) => {
-  // get restaurant summary info from restaurant table
-  const client = new Client({
+  const connection = mysql.createConnection({
     user: dbconf.role,
     host: dbconf.host,
-    database: 'reviews',
+    database: 'reviewsDB',
     password: dbconf.password,
-    port: 5432
+    port: 3306
   });
   const sql = squel.select()
     .from('restaurants')
@@ -47,52 +23,17 @@ module.exports.getSummary = (restaurantId, callback) => {
     .where(`id = ${restaurantId}`)
     .toString();
 
-  makeQuery(client, sql, callback);
+  connection.query(sql, callback);
 };
 
-// Reviews Handlers
-
-module.exports.createReview = (review, restaurantId, userId, callback) => {
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
-
-  const sql = `SELECT 
-    reviews.id, 
-    reviews.restaurant,
-    reviews.text,
-    reviews.date,
-    reviews.overall,
-    reviews.food,
-    reviews.service,
-    reviews.ambience,
-    reviews.wouldrecommend,
-    reviews.tags,
-    diners.firstname,
-    diners.lastname,
-    diners.city,
-    diners.avatarcolor,
-    diners.isvip,
-    diners.totalreviews
-    from reviews INNER JOIN diners 
-    on (reviews.diner = diners.id) 
-    where reviews.restaurant = ${restaurantId}`;
-
-  makeQuery(client, sql, callback);
-};
 module.exports.getAllReviews = (restaurantId, callback) => {
-  const client = new Client({
+  const connection = mysql.createConnection({
     user: dbconf.role,
     host: dbconf.host,
-    database: 'reviews',
+    database: 'reviewsDB',
     password: dbconf.password,
-    port: 5432
+    port: 3306
   });
-
   const sql = `SELECT 
     reviews.id, 
     reviews.restaurant,
@@ -114,73 +55,5 @@ module.exports.getAllReviews = (restaurantId, callback) => {
     on (reviews.diner = diners.id) 
     where reviews.restaurant = ${restaurantId}`;
 
-  makeQuery(client, sql, callback);
+  connection.query(sql, callback);
 };
-
-module.exports.updateReview = (review, reviewId, callback) => {
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
-
-  const sql = `SELECT 
-    reviews.id, 
-    reviews.restaurant,
-    reviews.text,
-    reviews.date,
-    reviews.overall,
-    reviews.food,
-    reviews.service,
-    reviews.ambience,
-    reviews.wouldrecommend,
-    reviews.tags,
-    diners.firstname,
-    diners.lastname,
-    diners.city,
-    diners.avatarcolor,
-    diners.isvip,
-    diners.totalreviews
-    from reviews INNER JOIN diners 
-    on (reviews.diner = diners.id) 
-    where reviews.restaurant = ${restaurantId}`;
-
-  makeQuery(client, sql, callback);
-};
-
-module.exports.deleteReview = (reviewId, callback) => {
-  const client = new Client({
-    user: dbconf.role,
-    host: dbconf.host,
-    database: 'reviews',
-    password: dbconf.password,
-    port: 5432
-  });
-
-  const sql = `SELECT 
-    reviews.id, 
-    reviews.restaurant,
-    reviews.text,
-    reviews.date,
-    reviews.overall,
-    reviews.food,
-    reviews.service,
-    reviews.ambience,
-    reviews.wouldrecommend,
-    reviews.tags,
-    diners.firstname,
-    diners.lastname,
-    diners.city,
-    diners.avatarcolor,
-    diners.isvip,
-    diners.totalreviews
-    from reviews INNER JOIN diners 
-    on (reviews.diner = diners.id) 
-    where reviews.restaurant = ${restaurantId}`;
-
-  makeQuery(client, sql, callback);
-};
-
-

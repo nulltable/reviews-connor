@@ -62,77 +62,26 @@ const Seed = {
   writeRestaurants() {
     for (let i = 0; i < 10000000; i++) {
       const restaurant = {};
+      restaurant.id = i + 1;
       restaurant.name = Seed.getRandomWord();
       restaurant.location = Seed.getRandomCity().replace(/'/g, '');
       restaurant.noise = Seed.getRandomNoiseLevel();
-      restaurant.location = Seed.getRandomCity().replace(/'/g, '');
       restaurant.averageoverall = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.averageservice = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.averageambience = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.averagefood = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.valuerating = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.recommendpercent = Math.floor(Math.random() * 100);
+      restaurant.capacity = Math.floor(Math.random() * 16) + 8;
       writer.write(restaurant);
-    }
-  },
-  writeDiners() {
-    for (let i = 0; i < 50; i++) {
-      const diner = {};
-      diner.firstname = Faker.name.firstName().replace(/'/g, '');
-      diner.lastname = Faker.name.lastName().replace(/'/g, '');
-      diner.city = Faker.address.city().replace(/'/g, '');
-      diner.totalreviews = Faker.random.number({ min: 0, max: 25 });
-      diner.avatarcolor = Seed.getRandomColor();
-      diner.isVIP = Seed.lowProbabilityRandom();
-      writer.write(diner);
-    }
-  },
-  writeReviews() {
-    for (let i = 0; i < 20000000; i++) {
-      const review = {};
-      review.restaurant = Math.floor(Math.random() * 10000000);
-      review.diner = Math.floor(Math.random() * 50);
-      review.text = Seed.getRandomSentence();
-      if (Math.random() > 0.7) {
-        review.text += ` ${Seed.getRandomSentence()}`;
-      }
-      review.date = Seed.getRandomDate();
-      review.overall = Math.floor(Math.random() * 5);
-      review.food = Math.floor(Math.random() * 5);
-      review.service = Math.floor(Math.random() * 5);
-      review.ambience = Math.floor(Math.random() * 5);
-      review.wouldrecommend = Seed.getRandomBoolean();
-      review.tags = '';
-      for (let j = 0; j < 2; j++) {
-        if (Math.random() > 0.8) {
-          if (review.tags[0]) {
-            review.tags += ',';
-          }
-          review.tags += Seed.getRandomFoodWord();
-          if (Math.random() > 0.9) {
-            review.tags += `,${Seed.getRandomTagWord()}`;
-          }
-        }
-      }
-      writer.write(review);
     }
   },
 };
 
 const dataGenerator = () => {
-  // writer.pipe(fs.createWriteStream('dinerData.csv'));
-  // Seed.writeDiners();
-  // writer.end();
-  // console.log("Done Writing Diners");
-
-  // writer.pipe(fs.createWriteStream('restaurantData.csv'));
-  // Seed.writeRestaurants();
-  // writer.end();
-  // console.log("Done Writing Restaurants");
-
-  writer.pipe(fs.createWriteStream('reviewData.csv', {flags: 'a'}));
-  Seed.writeReviews();
+  writer.pipe(fs.createWriteStream('restaurantData.csv'));
+  Seed.writeRestaurants();
   writer.end();
-  console.log("Done Writing Reviews");
+  console.log("Done Writing Restaurants");
 }
 dataGenerator();

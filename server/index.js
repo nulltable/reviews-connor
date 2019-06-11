@@ -1,5 +1,6 @@
 const path = require('path');
 const cors = require('cors');
+const nr = require('newrelic');
 const express = require('express');
 const db = require('../database/index.js');
 

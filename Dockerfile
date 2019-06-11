@@ -11,4 +11,4 @@ RUN npm install
 
 EXPOSE 3010
 
-CMD [ "npm", "run", "dockerstart" ]
+CMD [ "npm", "run", "start" ]
