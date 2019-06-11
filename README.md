@@ -55,10 +55,10 @@
 
 ### Data Generation and Seeding (10m restaurants)
 Generate CSV Data:
-  - npm run write-diners
-  - npm run write-restaurants
-  - npm run write-reviews (run 5 times while changing i and id in file)
-  - npm run write-reports
+  - npm run --max-old-space-size=8192 write-diners
+  - npm run --max-old-space-size=8192 write-restaurants
+  - npm run --max-old-space-size=8192 write-reviews (run 5 times while changing i and id in file)
+  - npm run --max-old-space-size=8192 write-reports
 
 Seed MySQL Database (replace {data} and path):
   - Run schema file in MySQL shell

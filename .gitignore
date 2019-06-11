@@ -32,6 +32,9 @@ public/bundle.js
 # Local Postgres Role Name
 config/db_config.js
 
+# New Relic Config
+newrelic.js
+
 # Data files
 dinerData.csv
 restaurantData.csv
