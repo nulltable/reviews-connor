@@ -5,7 +5,8 @@ const dbconf = require('./config/db_config.js');
 
 module.exports.getSummary = (restaurantId, callback) => {
   const pool = mysql.createPool({
-    connectionLimit: 10,
+    connectionLimit: 100,
+    timeout: 1000000,
     user: dbconf.role,
     host: dbconf.host,
     database: 'reviewsDB',
@@ -31,6 +32,7 @@ module.exports.getSummary = (restaurantId, callback) => {
 module.exports.getAllReviews = (restaurantId, callback) => {
   const pool = mysql.createPool({
     connectionLimit: 10,
+    timeout: 1000000,
     user: dbconf.role,
     host: dbconf.host,
     database: 'reviewsDB',
