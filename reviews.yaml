@@ -1,13 +1,30 @@
 config:
   target: 'http://localhost:3010'
   phases:
-    - duration: 120
-      arrivalRate: 200
-
+    # - duration: 10
+    #   arrivalRate: 500
+      - duration: 1
+        arrivalRate: 1
 scenarios:
   - name: "Reviews Stress Test"
     flow:
-      - get:
-          url: "/{{$randomNumber(1,10000000)}}/reviews"                          
-      - get:
-          url: "/{{$randomNumber(1,10000000)}}/summary"
+      # - loop:
+        # - get:
+        #     url: "/{{$randomNumber(1,10000000)}}/reviews"                          
+        # - get:
+        #     url: "/{{$randomNumber(1,10000000)}}/summary"
+      - post:
+          url: "/{{$randomNumber(1,10000000)}}/reviews"
+          json: 
+            id: 100000001
+            diner: 25
+            text: "sklafjsdalvjasdlvjalsdfjalsdkjfaslkdfj"
+            date: "1992-04-30"
+            overall: 4
+            food: 4
+            service: 4
+            ambience: 4
+            wouldrecommend: true
+            tags: "asdlfkjasdlkf"
+
+        # count: 10

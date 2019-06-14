@@ -3,11 +3,15 @@ const cors = require('cors');
 const nr = require('newrelic');
 const express = require('express');
 const db = require('../database/index.js');
+const bodyparser = require('body-parser');
+
 
 const app = express();
 
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, '../public')));
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended: false}));
 
 // Static page GET
 
@@ -50,8 +54,21 @@ app.get('/:id/reviews', (req, res) => {
   });
 });
 
-app.post('/:id/create', (req, res) => {
-  db.createReview(req.header.data.review, req.params.id, req.header.data.userID, (err) => {
+app.post('/:id/reviews', (req, res) => {
+  db.createReview(req.params.id, req.body, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500);
+      res.end();
+    } else {
+      res.status(200);
+      res.end();
+    }
+  });
+});
+
+app.put('/:id/reviews', (req, res) => {
+  db.updateReview(req.body.review, (err) => {
     if (err) {
       res.status(500);
       res.end();
@@ -62,20 +79,8 @@ app.post('/:id/create', (req, res) => {
   });
 });
 
-app.put('./:id/reviews', (req, res) => {
-  db.updateReview(req.header.data.review, req.header.data.id, (err) => {
-    if (err) {
-      res.status(500);
-      res.end();
-    } else {
-      res.status(200);
-      res.end();
-    }
-  });
-});
-
-app.delete('./:id/reviews', (req, res) => {
-  db.deleteReviews(req.header.data.id, (err) => {
+app.delete('/:id/reviews', (req, res) => {
+  db.deleteReviews(req.body.review, (err) => {
     if (err) {
       res.status(500);
       res.end();
