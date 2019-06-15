@@ -6,7 +6,9 @@ const dbconf = require('./config/db_config.js');
 module.exports.getSummary = (restaurantId, callback) => {
   const pool = mysql.createPool({
     connectionLimit: 100,
-    timeout: 1000000,
+    timeout: 1,
+    // connectTimeout: 10,
+    // acquireTimeout: 20,
     user: dbconf.role,
     host: dbconf.host,
     database: 'reviewsDB',
@@ -31,8 +33,10 @@ module.exports.getSummary = (restaurantId, callback) => {
 
 module.exports.getAllReviews = (restaurantId, callback) => {
   const pool = mysql.createPool({
-    connectionLimit: 10,
-    timeout: 1000000,
+    connectionLimit: 100,
+    timeout: 15,
+    // connectTimeout: 10,
+    // acquireTimeout: 20,
     user: dbconf.role,
     host: dbconf.host,
     database: 'reviewsDB',
@@ -62,3 +66,21 @@ module.exports.getAllReviews = (restaurantId, callback) => {
 
     pool.query(sql, callback);
   };
+
+  module.exports.createReview = (restaurantId, review, callback) => {
+    const pool = mysql.createPool({
+      connectionLimit: 100,
+      // connectTimeout: 10,
+      timeout: 15,
+      // acquireTimeout: 20,
+      user: dbconf.role,
+      host: dbconf.host,
+      database: 'reviewsDB',
+      password: dbconf.password,
+      port: 3306
+    });
+
+    const sql = `INSERT INTO reviews (restaurant, diner, text, date, overall, food, service, ambience, wouldrecommend, tags) VALUES (${restaurantId}, ${review.diner}, '${review.text}', '${review.date}', ${review.overall}, ${review.food}, ${review.service}, ${review.ambience}, ${review.wouldrecommend}, '${review.tags}')`;
+
+    pool.query(sql, callback);
+  }
