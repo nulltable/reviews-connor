@@ -28,7 +28,7 @@ const Seed = {
   },
 }
 
-function writeOneHundredMillionTimes(writer) {
+function writeTwentyMillionTimes(writer) {
   let i = 100000000;
 
   write();
@@ -62,7 +62,7 @@ function writeOneHundredMillionTimes(writer) {
           }
         }
       }
-      if (i === 0) {
+      if (i === 20000000) {
         stringify(review, {header: true, columns: review}, (err, data) => {
           if (err) {
             throw err;
@@ -77,11 +77,11 @@ function writeOneHundredMillionTimes(writer) {
           writer.write(data);
         });
       }
-    } while (i > 0 && ok);
-    if (i > 0) {
+    } while (i > 20000000 && ok);
+    if (i > 20000000) {
       writer.once('drain', write);
     }
   }
 }
 
-writeOneHundredMillionTimes(fs.createWriteStream('reviewData.csv', {flags: 'a'}));
+writeTwentyMillionTimes(fs.createWriteStream('reviewData{i}.csv', {flags: 'a'}));

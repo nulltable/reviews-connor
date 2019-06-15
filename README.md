@@ -31,7 +31,6 @@
 
 - Node 6.13.0	
 - MySQL
-- MongoDB
 
  ## Deployment	
 
@@ -55,10 +54,10 @@
 
 ### Data Generation and Seeding (10m restaurants)
 Generate CSV Data:
-  - npm run --max-old-space-size=8192 write-diners
-  - npm run --max-old-space-size=8192 write-restaurants
-  - npm run --max-old-space-size=8192 write-reviews (run 5 times while changing i and id in file)
-  - npm run --max-old-space-size=8192 write-reports
+  - npm run write-diners
+  - npm run write-restaurants
+  - npm run write-reviews (run 5 times while changing i and id in file)
+  - npm run write-reports
 
 Seed MySQL Database (replace {data} and path):
   - Run schema file in MySQL shell
@@ -67,21 +66,10 @@ Seed MySQL Database (replace {data} and path):
     INTO TABLE reports
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
-    IGNORE 1 ROWS;
   - Index foreign keys by running:
           ALTER TABLE reviews ADD INDEX (restaurant);
           ALTER TABLE reviews ADD INDEX (diner);
           ALTER TABLE reports ADD INDEX (review);
-
-Seed MongoDB Database (replace {data} and path):
-  - Run following command in terminal for each table (diners, reviews x 5, restaurants, reports)
-  - mongoimport --db reviewsDB --collection {data} --type csv --headerline < /Users/connorhoman/Desktop/reviews-connor/{data}.csv
-  - Index id's for each table by running (replace data):
-          db.{data}.createIndex({id: 1}); 
-  - Index foreign keys by running:
-          db.reviews.createIndex({restaurant: 1});
-          db.reviews.createIndex({diner: 1});
-          db.reports.createIndex({review: 1});
 
  ## API
 
