@@ -19,7 +19,8 @@
     "server-dev": "nodemon ./server/server.js",
     "react-dev": "webpack -d -w",
     "build": "webpack -d",
-    "start": "node ./server/server.js",
+    "start": "node --max-old-space-size=8192 ./server/server.js",
+    "pm2": "pm2 start -i 0 ./server/server.js --node-args='--max-old-space-size=8192'",
     "add": "eslint '*/**' --ignore-path .lintignore && git add -A",
     "pg-setup": "brew install postgres && brew services start postgres && createdb reviews && psql reviews",
     "test": "jest --coverage",
@@ -29,6 +30,7 @@
     "write-reviews": "node --max-old-space-size=8192 ./database/reviewGenerator.js"
   },
   "dependencies": {
+    "artillery": "^1.6.0-28",
     "babel-plugin-react-css-modules": "^5.2.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

@@ -1,9 +1,12 @@
 const mysql = require('mysql');
+const util = require('util');
 const squel = require('squel');
-const dbconf = require('../config/db_config.js');
+const dbconf = require('./config/db_config.js');
 
 module.exports.getSummary = (restaurantId, callback) => {
-  const connection = mysql.createConnection({
+  const pool = mysql.createPool({
+    connectionLimit: 100,
+    timeout: 1000000,
     user: dbconf.role,
     host: dbconf.host,
     database: 'reviewsDB',
@@ -23,11 +26,13 @@ module.exports.getSummary = (restaurantId, callback) => {
     .where(`id = ${restaurantId}`)
     .toString();
 
-  connection.query(sql, callback);
-};
+    pool.query(sql, callback);
+  };
 
 module.exports.getAllReviews = (restaurantId, callback) => {
-  const connection = mysql.createConnection({
+  const pool = mysql.createPool({
+    connectionLimit: 10,
+    timeout: 1000000,
     user: dbconf.role,
     host: dbconf.host,
     database: 'reviewsDB',
@@ -55,5 +60,5 @@ module.exports.getAllReviews = (restaurantId, callback) => {
     on (reviews.diner = diners.id) 
     where reviews.restaurant = ${restaurantId}`;
 
-  connection.query(sql, callback);
-};
+    pool.query(sql, callback);
+  };

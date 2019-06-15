@@ -25,8 +25,9 @@ app.get('/:id', (req, res) => {
 app.get('/:id/summary', (req, res) => {
   db.getSummary(req.params.id, (err, result) => {
     if (err) {
+      console.log('summary', err)
       res.status(500);
-      res.end();
+      res.send(err);
     } else {
       res.status(200);
       res.send(result);
@@ -39,8 +40,9 @@ app.get('/:id/summary', (req, res) => {
 app.get('/:id/reviews', (req, res) => {
   db.getAllReviews(req.params.id, (err, result) => {
     if (err) {
+      console.log('reviews', err)
       res.status(500);
-      res.end();
+      res.send(err);
     } else {
       res.status(200);
       res.send(result);

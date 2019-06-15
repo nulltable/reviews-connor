@@ -1,0 +1,13 @@
+config:
+  target: 'http://localhost:3010'
+  phases:
+    - duration: 120
+      arrivalRate: 200
+
+scenarios:
+  - name: "Reviews Stress Test"
+    flow:
+      - get:
+          url: "/{{$randomNumber(1,10000000)}}/reviews"                          
+      - get:
+          url: "/{{$randomNumber(1,10000000)}}/summary"
