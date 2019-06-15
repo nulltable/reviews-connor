@@ -60,7 +60,7 @@ const Seed = {
 };
 
 function writeTenMillionTimes(writer) {
-  let i = 100000;
+  let i = 10000000;
 
   write();
   function write() {
@@ -101,4 +101,4 @@ function writeTenMillionTimes(writer) {
   }
 }
 
-writeTenMillionTimes(fs.createWriteStream('restaurantDatatest.csv', {flags: 'a'}));
+writeTenMillionTimes(fs.createWriteStream('restaurantData.csv', {flags: 'a'}));

@@ -1,9 +1,0 @@
-#!/bin/bash
-# remove all docker containers and images created by the 'compose' executable
-# ... and then some. be careful.
-docker stop rfe rdb
-docker rm rfe rdb
-docker network rm revnet
-docker rmi rfeimg rdbimg
-docker image prune
-docker volume prune

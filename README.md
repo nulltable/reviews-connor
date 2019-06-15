@@ -66,6 +66,7 @@ Seed MySQL Database (replace {data} and path):
     INTO TABLE reports
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
+    IGNORE 1 LINES
   - Index foreign keys by running:
           ALTER TABLE reviews ADD INDEX (restaurant);
           ALTER TABLE reviews ADD INDEX (diner);

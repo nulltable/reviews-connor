@@ -84,4 +84,4 @@ function writeTwentyMillionTimes(writer) {
   }
 }
 
-writeTwentyMillionTimes(fs.createWriteStream('reviewData{i}.csv', {flags: 'a'}));
+writeTwentyMillionTimes(fs.createWriteStream('reviewData1.csv', {flags: 'a'}));
