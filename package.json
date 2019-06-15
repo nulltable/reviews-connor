@@ -17,6 +17,7 @@
   },
   "scripts": {
     "server-dev": "nodemon ./server/server.js",
+    "artillery": "artillery run reviews.yaml",
     "react-dev": "webpack -d -w",
     "build": "webpack -d",
     "start": "node --max-old-space-size=8192 ./server/server.js",

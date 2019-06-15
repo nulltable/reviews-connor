@@ -10,8 +10,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, '../public')));
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({extended: false}));
 
 // Static page GET
 
@@ -29,7 +27,7 @@ app.get('/:id', (req, res) => {
 app.get('/:id/summary', (req, res) => {
   db.getSummary(req.params.id, (err, result) => {
     if (err) {
-      console.log('summary', err)
+      console.log('get summary', err);
       res.status(500);
       res.send(err);
     } else {
@@ -44,7 +42,7 @@ app.get('/:id/summary', (req, res) => {
 app.get('/:id/reviews', (req, res) => {
   db.getAllReviews(req.params.id, (err, result) => {
     if (err) {
-      console.log('reviews', err)
+      console.log('get reviews', err);
       res.status(500);
       res.send(err);
     } else {
@@ -54,10 +52,13 @@ app.get('/:id/reviews', (req, res) => {
   });
 });
 
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended: false}));
+
 app.post('/:id/reviews', (req, res) => {
   db.createReview(req.params.id, req.body, (err) => {
     if (err) {
-      console.log(err);
+      console.log('post', err);
       res.status(500);
       res.end();
     } else {
