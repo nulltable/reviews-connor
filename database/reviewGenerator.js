@@ -30,7 +30,7 @@ const Seed = {
   },
   writeReviews() {
     // update id numbers by batch
-    for (let i = 80000000; i < 100000000; i++) {
+    for (let i = 90000000; i < 100000000; i++) {
       if (i % 100000 === 0) {
         console.log(i);
       }
@@ -67,7 +67,7 @@ const Seed = {
 
 // Change i to 1-5 while generating 100m records
 const dataGenerator = () => {
-  writer.pipe(fs.createWriteStream('reviewData5.csv', {flags: 'a'}));
+  writer.pipe(fs.createWriteStream('reviewData10.csv', {flags: 'a'}));
   Seed.writeReviews();
   writer.end();
   console.log("Done Writing Reviews");

@@ -12,12 +12,6 @@
 
  ## Usage	
 
- ### Docker	
-
-> Make sure no images with the names "rdbimg" or "rfeimg", or containers with the names "rdb" or "rfe" exist on the host	
-> call 'bash compose'	
-> visit port 3010 on the host IP	
-
  ### Node	
 
 > Install the necessary dependencies for this module (npm install)	
@@ -25,12 +19,13 @@
 > If it's your first time downloading the repo, [seed the database](#postgresql)	
 > Start the server (npm run sever-dev)	
 > The public folder will be available at localhost port 3010	
+
  ## Requirements	
 
  An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).	
 
 - Node 6.13.0	
-- MySQL
+- MySQL 5.7
 
  ## Deployment	
 
@@ -62,11 +57,11 @@ Generate CSV Data:
 Seed MySQL Database (replace {data} and path):
   - Run schema file in MySQL shell
   - Run following command inside MySQL shell for each table (diners, reviews x 5, restaurants, reports)
-  - LOAD DATA LOCAL INFILE 'root' 
-    INTO TABLE restaurants
+  - LOAD DATA LOCAL INFILE 'reviews.csv' 
+    INTO TABLE reviews
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
-    IGNORE 1 LINES
+    IGNORE 1 LINES;
   - Index foreign keys by running:
           ALTER TABLE reviews ADD INDEX (restaurant);
           ALTER TABLE reviews ADD INDEX (diner);
@@ -78,14 +73,35 @@ On EC2:
   - sudo /usr/bin/mysql_secure_installation
   - Generate CSV files locally
   - Load schema file with mysql -u root -p < schema.sql
-  - Each File: 
-    - sudo scp -i /Users/connorhoman/Desktop/SDC.pem reviewData5.csv.zip ec2-user@18.225.11.255:~/reviewData5.csv.zip
-  - Each File: 
-    - LOAD DATA LOCAL INFILE '{data}Data.csv' 
-      INTO TABLE {data}
+
+SET autocommit=0;
+SET unique_checks=0;
+SET foreign_key_checks=0;
+SET GLOBAL innodb_flush_log_at_trx_commit = 2;
+SET GLOBAL innodb_thread_concurrency=8;
+SET GLOBAL innodb_support_xa=0;
+
+binlog_cache_size=32768
+innodb_buffer_pool_size=68451041
+innodb_file_per_table=1
+innodb_log_buffer_size=8388608
+innodb_log_file_size=134217728
+key_buffer_size=16777216
+max_binlog_size=134217728
+max_connections=8
+read_buffer_size=262144
+max_md_buffer_size=524288
+thread_stack=196608
+
+
+  - Send Each File: 
+    - sudo scp -i /Users/connorhoman/Desktop/SDC.pem reviews.csv.zip ec2-user@18.225.11.255:~/reviews.csv.zip
+  - Load Each File: 
+    - LOAD DATA LOCAL INFILE 'reviews.csv' 
+      INTO TABLE reviews
       FIELDS TERMINATED BY ',' 
       LINES TERMINATED BY '\n'
-      IGNORE 1 LINES
+      IGNORE 1 LINES;
   - Index foreign keys by running:
     ALTER TABLE reviews ADD INDEX (restaurant);
     ALTER TABLE reviews ADD INDEX (diner);  
