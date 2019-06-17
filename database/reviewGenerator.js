@@ -1,7 +1,9 @@
 const Faker = require('faker');
 const moment = require('moment');
 const fs = require('fs');
-const stringify = require('csv-stringify');
+const csvWriter = require('csv-write-stream');
+
+const writer = csvWriter();
 
 const Seed = {
   foodWords: ['pot roast', 'chicken', 'sushi', 'marshmallows', 'pumpkin pie', 'wine'],
@@ -26,18 +28,14 @@ const Seed = {
   getRandomBoolean() {
     return Seed.boolean[Math.floor(Math.random() * 2)];
   },
-}
-
-function writeTwentyMillionTimes(writer) {
-  let i = 100000000;
-
-  write();
-  function write() {
-    let ok = true;
-    do {
-      i--;
+  writeReviews() {
+    // update id numbers by batch
+    for (let i = 80000000; i < 100000000; i++) {
+      if (i % 100000 === 0) {
+        console.log(i);
+      }
       const review = {};
-      review.id = i;
+      review.id = i + 1;
       review.restaurant = Math.floor(Math.random() * 10000000);
       review.diner = Math.floor(Math.random() * 50);
       review.text = Seed.getRandomSentence();
@@ -62,26 +60,16 @@ function writeTwentyMillionTimes(writer) {
           }
         }
       }
-      if (i === 20000000) {
-        stringify(review, {header: true, columns: review}, (err, data) => {
-          if (err) {
-            throw err;
-          }
-          writer.write(data);
-        });
-      } else {
-        ok = stringify(review, {header: true, columns: review}, (err, data) => {
-          if (err) {
-            throw err;
-          }
-          writer.write(data);
-        });
-      }
-    } while (i > 20000000 && ok);
-    if (i > 20000000) {
-      writer.once('drain', write);
+      writer.write(review);
     }
-  }
-}
+  },
+};
 
-writeTwentyMillionTimes(fs.createWriteStream('reviewData1.csv', {flags: 'a'}));
+// Change i to 1-5 while generating 100m records
+const dataGenerator = () => {
+  writer.pipe(fs.createWriteStream('reviewData5.csv', {flags: 'a'}));
+  Seed.writeReviews();
+  writer.end();
+  console.log("Done Writing Reviews");
+}
+dataGenerator();

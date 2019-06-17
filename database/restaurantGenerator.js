@@ -1,7 +1,9 @@
 const Faker = require('faker');
 const moment = require('moment');
 const fs = require('fs');
-const stringify = require('csv-stringify');
+const csvWriter = require('csv-write-stream');
+
+const writer = csvWriter();
 
 const Seed = {
   foodWords: ['pot roast', 'chicken', 'sushi', 'marshmallows', 'pumpkin pie', 'wine'],
@@ -57,16 +59,11 @@ const Seed = {
     }
     return number[0];
   },
-};
-
-function writeTenMillionTimes(writer) {
-  let i = 10000000;
-
-  write();
-  function write() {
-    let ok = true;
-    do {
-      i--;
+  writeRestaurants() {
+    for (let i = 0; i < 10000000; i++) {
+      if (i % 100000 === 0) {
+        console.log(i)
+      }
       const restaurant = {};
       restaurant.id = i + 1;
       restaurant.name = Seed.getRandomWord();
@@ -79,26 +76,15 @@ function writeTenMillionTimes(writer) {
       restaurant.valuerating = Seed.fixFloatPrecision(Math.floor(Math.random() * 50) / 10);
       restaurant.recommendpercent = Math.floor(Math.random() * 100);
       restaurant.capacity = Math.floor(Math.random() * 16) + 8;
-      if (i === 0) {
-        stringify(restaurant, {header: true, columns: restaurant}, (err, data) => {
-          if (err) {
-            throw err;
-          }
-          writer.write(data);
-        });
-      } else {
-        ok = stringify(restaurant, {header: true, columns: restaurant}, (err, data) => {
-          if (err) {
-            throw err;
-          }
-          writer.write(data);
-        });
-      }
-    } while (i > 0 && ok);
-    if (i > 0) {
-      writer.once('drain', write);
+      writer.write(restaurant);
     }
-  }
-}
+  },
+};
 
-writeTenMillionTimes(fs.createWriteStream('restaurantData.csv', {flags: 'a'}));
+const dataGenerator = () => {
+  writer.pipe(fs.createWriteStream('restaurantData.csv'));
+  Seed.writeRestaurants();
+  writer.end();
+  console.log("Done Writing Restaurants");
+}
+dataGenerator();

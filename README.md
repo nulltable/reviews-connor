@@ -62,8 +62,8 @@ Generate CSV Data:
 Seed MySQL Database (replace {data} and path):
   - Run schema file in MySQL shell
   - Run following command inside MySQL shell for each table (diners, reviews x 5, restaurants, reports)
-  - LOAD DATA LOCAL INFILE '/Users/connorhoman/Desktop/reviews-connor/reportData.csv' 
-    INTO TABLE reports
+  - LOAD DATA LOCAL INFILE 'root' 
+    INTO TABLE restaurants
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES
@@ -71,6 +71,25 @@ Seed MySQL Database (replace {data} and path):
           ALTER TABLE reviews ADD INDEX (restaurant);
           ALTER TABLE reviews ADD INDEX (diner);
           ALTER TABLE reports ADD INDEX (review);
+
+On EC2:
+  - sudo yum install mysql-server
+  - sudo /sbin/service mysqld start
+  - sudo /usr/bin/mysql_secure_installation
+  - Generate CSV files locally
+  - Load schema file with mysql -u root -p < schema.sql
+  - Each File: 
+    - sudo scp -i /Users/connorhoman/Desktop/SDC.pem reviewData5.csv.zip ec2-user@18.225.11.255:~/reviewData5.csv.zip
+  - Each File: 
+    - LOAD DATA LOCAL INFILE '{data}Data.csv' 
+      INTO TABLE {data}
+      FIELDS TERMINATED BY ',' 
+      LINES TERMINATED BY '\n'
+      IGNORE 1 LINES
+  - Index foreign keys by running:
+    ALTER TABLE reviews ADD INDEX (restaurant);
+    ALTER TABLE reviews ADD INDEX (diner);  
+    ALTER TABLE reports ADD INDEX (review);
 
  ## API
 
