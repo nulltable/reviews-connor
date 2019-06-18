@@ -39,47 +39,50 @@
  ### Installing Dependencies	
 
   - Globally:	
-
     npm install -g webpack	
     npm install -g webpack-cli	
-
   - In this repo:	
-
     npm install	
+  - Install MySQL On EC2:
+    - sudo yum install mysql-server
+    - sudo /sbin/service mysqld start
+    - sudo /usr/bin/mysql_secure_installation
+    - Generate CSV files locally
+    - Load schema file with mysql -u root -p < schema.sql
 
-### Data Generation and Seeding (10m restaurants)
-Generate CSV Data:
+### Data Generation and Seeding (10m restaurants, 100m reviews ~ 25gb)
+
+Generate CSV Data Locally :
   - npm run write-diners
   - npm run write-restaurants
   - npm run write-reviews (run 5 times while changing i and id in file)
   - npm run write-reports
-
+Send Each File: 
+    - Compress into .zip
+    - sudo scp -i {/Users/connorhoman/Desktop/}{database}.pem {data}Data.csv.zip ec2-user@13.59.229.53:~/{data}Data.csv.zip  
 Seed MySQL Database (replace {data} and path):
-  - Run schema file in MySQL shell
-  - Run following command inside MySQL shell for each table (diners, reviews x 5, restaurants, reports)
-  - LOAD DATA LOCAL INFILE 'reviews.csv' 
+  - Run schema file (exclude the indexes/foreign keys)
+  - Unzip files
+  - Run following command inside MySQL shell for each table (diners, reviews x 10, restaurants, reports)
+  - USE reviewsDB;
+    SET autocommit=0;
+    SET unique_checks=0;
+    SET foreign_key_checks=0;
+    SET GLOBAL innodb_flush_log_at_trx_commit = 2;
+    SET GLOBAL innodb_thread_concurrency=8;
+    SET GLOBAL innodb_support_xa=0;
+    LOAD DATA LOCAL INFILE 'reviewData10.csv' 
     INTO TABLE reviews
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES;
   - Index foreign keys by running:
+    Add foreign keys
           ALTER TABLE reviews ADD INDEX (restaurant);
           ALTER TABLE reviews ADD INDEX (diner);
           ALTER TABLE reports ADD INDEX (review);
 
-On EC2:
-  - sudo yum install mysql-server
-  - sudo /sbin/service mysqld start
-  - sudo /usr/bin/mysql_secure_installation
-  - Generate CSV files locally
-  - Load schema file with mysql -u root -p < schema.sql
-
-SET autocommit=0;
-SET unique_checks=0;
-SET foreign_key_checks=0;
-SET GLOBAL innodb_flush_log_at_trx_commit = 2;
-SET GLOBAL innodb_thread_concurrency=8;
-SET GLOBAL innodb_support_xa=0;
+###My.CnF?
 
 binlog_cache_size=32768
 innodb_buffer_pool_size=68451041
@@ -92,20 +95,6 @@ max_connections=8
 read_buffer_size=262144
 max_md_buffer_size=524288
 thread_stack=196608
-
-
-  - Send Each File: 
-    - sudo scp -i /Users/connorhoman/Desktop/SDC.pem reviews.csv.zip ec2-user@18.225.11.255:~/reviews.csv.zip
-  - Load Each File: 
-    - LOAD DATA LOCAL INFILE 'reviews.csv' 
-      INTO TABLE reviews
-      FIELDS TERMINATED BY ',' 
-      LINES TERMINATED BY '\n'
-      IGNORE 1 LINES;
-  - Index foreign keys by running:
-    ALTER TABLE reviews ADD INDEX (restaurant);
-    ALTER TABLE reviews ADD INDEX (diner);  
-    ALTER TABLE reports ADD INDEX (review);
 
  ## API
 
