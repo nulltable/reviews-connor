@@ -8,7 +8,7 @@ const writer = csvWriter();
 const Seed = {
   foodWords: ['pot roast', 'chicken', 'sushi', 'marshmallows', 'pumpkin pie', 'wine'],
   tagWords: ['groups', 'kids', 'gluten free', 'vegan'],
-  boolean: [true, false],
+  boolean: [0, 1],
   sentences: [Faker.lorem.sentences(),Faker.lorem.sentences(),Faker.lorem.sentences(),Faker.lorem.sentences(),Faker.lorem.sentences(),Faker.lorem.sentences()],
   cities: [Faker.address.city(),Faker.address.city(),Faker.address.city(),Faker.address.city(),Faker.address.city(),Faker.address.city()],
   dates: [moment(Faker.date.recent()).format('YYYY-MM-DD'), moment(Faker.date.recent()).format('YYYY-MM-DD'), moment(Faker.date.recent()).format('YYYY-MM-DD'), moment(Faker.date.recent()).format('YYYY-MM-DD'), moment(Faker.date.recent()).format('YYYY-MM-DD'), moment(Faker.date.recent()).format('YYYY-MM-DD'), ],
@@ -30,7 +30,7 @@ const Seed = {
   },
   writeReviews() {
     // update id numbers by batch
-    for (let i = 90000000; i < 100000000; i++) {
+    for (let i = 0; i < 10000000; i++) {
       if (i % 100000 === 0) {
         console.log(i);
       }
@@ -50,14 +50,12 @@ const Seed = {
       review.wouldrecommend = Seed.getRandomBoolean();
       review.tags = '';
       for (let j = 0; j < 2; j++) {
-        if (Math.random() > 0.8) {
-          if (review.tags[0]) {
-            review.tags += ',';
-          }
-          review.tags += Seed.getRandomFoodWord();
-          if (Math.random() > 0.9) {
-            review.tags += `,${Seed.getRandomTagWord()}`;
-          }
+        if (review.tags[0]) {
+          review.tags += ' ';
+        }
+        review.tags += Seed.getRandomFoodWord();
+        if (Math.random() > 0.9) {
+          review.tags += `${Seed.getRandomTagWord()}`;
         }
       }
       writer.write(review);
@@ -67,7 +65,7 @@ const Seed = {
 
 // Change i to 1-5 while generating 100m records
 const dataGenerator = () => {
-  writer.pipe(fs.createWriteStream('reviewData10.csv', {flags: 'a'}));
+  writer.pipe(fs.createWriteStream('reviewData{i}.csv', {flags: 'a'}));
   Seed.writeReviews();
   writer.end();
   console.log("Done Writing Reviews");

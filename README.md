@@ -1,43 +1,36 @@
 # Reviews and Impressions Module	
-
  > This module is part of the FreeSeats restaurant reservation app. It displays data relevant to the customer experience overall, as well as renders every review for that restaurant.	
+
  ## Related Modules	
 
- ## Table of Contents	
 
+ ## Table of Contents	
 1. [Usage](#Usage)	
 1. [Requirements](#requirements)	
 1. [Development](#development)	
 1. [API](#api)	
 
- ## Usage	
+ ## Requirements	
+ An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).	
+- Node 6.13.0	
+- MySQL 5.7
 
  ### Node	
-
 > Install the necessary dependencies for this module (npm install)	
 > Transpile and bundle all the components (webpack)	
 > If it's your first time downloading the repo, [seed the database](#postgresql)	
 > Start the server (npm run sever-dev)	
 > The public folder will be available at localhost port 3010	
 
- ## Requirements	
-
- An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).	
-
-- Node 6.13.0	
-- MySQL 5.7
-
  ## Deployment	
-
+- sudo ssh -i mysql-sdc.pem ec2-user@18.220.157.200
+  > use sudo su to log into root user
 - When ready to deploy, run webpack without watch mode:	
   > npm run build	
 - Start the server:	
   > npm run start	
 
- ## Development	
-
  ### Installing Dependencies	
-
   - Globally:	
     npm install -g webpack	
     npm install -g webpack-cli	
@@ -49,41 +42,39 @@
     - sudo /usr/bin/mysql_secure_installation
     - Generate CSV files locally
     - Load schema file with mysql -u root -p < schema.sql
+  - If you restart EC2 instance, re-install MySQL: 
+    - sudo yum -y remove mysql-server
+    - wget http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm 
+    - sudo yum localinstall mysql57-community-release-el7-8.noarch.rpm 
+    - sudo yum install mysql-community-server 
+    - sudo service mysqld start
 
 ### Data Generation and Seeding (10m restaurants, 100m reviews ~ 25gb)
-
-Generate CSV Data Locally :
+Generate CSV Data Locally:
   - npm run write-diners
   - npm run write-restaurants
-  - npm run write-reviews (run 5 times while changing i and id in file)
+  - npm run write-reviews (run 10 times while changing i and id in file)
   - npm run write-reports
-Send Each File: 
-    - Compress into .zip
-    - sudo scp -i {/Users/connorhoman/Desktop/}{database}.pem {data}Data.csv.zip ec2-user@13.59.229.53:~/{data}Data.csv.zip  
+Send Each File via SSH: (replace {data} and IP)
+    - Compress into .zip if necessary
+    - sudo scp -i /Users/connorhoman/Desktop/mysql-sdc.pem reviewData{i}.csv ec2-user@18.220.157.200:~/reviewData{i}.csv
 Seed MySQL Database (replace {data} and path):
-  - Run schema file (exclude the indexes/foreign keys)
-  - Unzip files
-  - Run following command inside MySQL shell for each table (diners, reviews x 10, restaurants, reports)
+  - Unzip files if necessary
+  - mysql -u root -p < database/schema.sql (or copy contents into shell)
+  - Run following command for each file (diners, reviews x 10, restaurants, reports)
   - USE reviewsDB;
-    SET autocommit=0;
-    SET unique_checks=0;
-    SET foreign_key_checks=0;
-    SET GLOBAL innodb_flush_log_at_trx_commit = 2;
-    SET GLOBAL innodb_thread_concurrency=8;
-    SET GLOBAL innodb_support_xa=0;
-    LOAD DATA LOCAL INFILE 'reviewData10.csv' 
+    LOAD DATA LOCAL INFILE 'reviewData{i}.csv' 
     INTO TABLE reviews
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES;
-  - Index foreign keys by running:
-    Add foreign keys
-          ALTER TABLE reviews ADD INDEX (restaurant);
-          ALTER TABLE reviews ADD INDEX (diner);
-          ALTER TABLE reports ADD INDEX (review);
+  - Add indexes by running:
+      ALTER TABLE reviews ADD INDEX (restaurant);
+      ALTER TABLE reviews ADD INDEX (diner);
+      ALTER TABLE reports ADD INDEX (review);   
 
-###My.CnF?
-
+###MySQL Configurations
+##my.cnf
 binlog_cache_size=32768
 innodb_buffer_pool_size=68451041
 innodb_file_per_table=1
@@ -96,23 +87,22 @@ read_buffer_size=262144
 max_md_buffer_size=524288
 thread_stack=196608
 
+##server variables
+SET unique_checks=0;
+SET foreign_key_checks=0;
+SET GLOBAL innodb_flush_log_at_trx_commit = 2;
+SET GLOBAL innodb_thread_concurrency=8;
+SET GLOBAL innodb_support_xa=0;
+
  ## API
-
  ### Reviews Summary	
-
  #### HTTP request	
-
  GET http://localhost:3010/:id/summary	
-
  ##### Parameters	
-**restaurant id**  	
-
+ **restaurant id**  	
  The **restaurant id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.	
-
  ##### Response	
-
  If successful, this method returns a response body with the following structure:	
-
  {  	
   "location": **_string_**,  	
   "noise": **_string_**,  	
@@ -123,29 +113,21 @@ thread_stack=196608
   "averageAmbience": **_string_**,  	
   "averageService": **_string_**,
   "capacity": **_integer_**  	
-}  	
-
+ }
  ### Restaurant Reviews	
-
  #### HTTP Request	
-
  POST http://localhost:3010/:id/reviews	
-
  ##### Parameters 	
-**review,**	
-**restaurant id,**	
-**user id,**  	
-
-The **restaurant** specifies the unique id of the restaurant being queried. 	
-The **user** specifires the unique id of the user being queried. 	
-The **review** parameter should be an object of the following structure:	
-
+ **review,**	
+ **restaurant id,**	
+ **user id,**  	
+ The **restaurant** specifies the unique id of the restaurant being queried. 	
+ The **user** specifires the unique id of the user being queried. 	
+ The **review** parameter should be an object of the following structure:	
  ##### Response	
-
  If successful, this method:	
-1) pushes user and restaurant into respective tables (if they do not exist)	
-2) pushes the review object into an array containing objects with the following structure:	
-
+ 1) pushes user and restaurant into respective tables (if they do not exist)	
+ 2) pushes the review object into an array containing objects with the following structure:	
  {  	
   "id": **_integer_**,  	
   "restaurant": **_integer_**,  	
@@ -162,45 +144,27 @@ The **review** parameter should be an object of the following structure:
   "lastname": **_string_**,  	
   "city": **_string_**,  	
   "totalreviews": **_integer_**  	
-}	
-#### HTTP Request	
-
+ }	
+ #### HTTP Request	
  GET http://localhost:3010/:id/reviews	
-
  ##### Parameters	
-**restaurant id**   	
-
+ **restaurant id**   	
  The **restaurant id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.	
-
  ##### Response	
-
  If successful, this method returns an array containing objects with the previously listed structure.	
-
  #### HTTP Request	
-
  PUT http://localhost:3010/:id/reviews	
-
  ##### Parameters	
-**review id,**	
-**review**  	
-
+ **review id,**	
+ **review**  	
  The **review id** parameter specifies the unique id of the review being queried. 	
-The **review** parameter should be an object with of the previously listed structure:	
-
+ The **review** parameter should be an object with of the previously listed structure:	
  ##### Response	
-
  If successful, this method updates an object in the reviews array to contain the new review data.	
-
-
  #### HTTP Request	
-
  DELETE http://localhost:3010/:id/reviews	
-
  ##### Parameters	
-**review id**  	
-
+ **review id**  	
  The **review id** parameter specifies the unique id of the restaurant being queried. Seeded test values range from 1-5.	
-
  ##### Response	
-
  If successful, this method deletes an object in the reviews array at a the given id.
