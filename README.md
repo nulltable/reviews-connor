@@ -23,7 +23,7 @@
 > The public folder will be available at localhost port 3010	
 
  ## Deployment	
-- sudo ssh -i mysql-sdc.pem ec2-user@18.220.157.200
+- sudo ssh -i service-sdc.pem ec2-user@18.224.200.68
   > use sudo su to log into root user
 - When ready to deploy, run webpack without watch mode:	
   > npm run build	
@@ -31,23 +31,22 @@
   > npm run start	
 
  ### Installing Dependencies	
-  - Globally:	
+  - Install service on EC2:	
     npm install -g webpack	
-    npm install -g webpack-cli	
-  - In this repo:	
+    npm install -g webpack-cli
     npm install	
-  - Install MySQL On EC2:
+  - Install database On EC2:
     - sudo yum install mysql-server
     - sudo /sbin/service mysqld start
     - sudo /usr/bin/mysql_secure_installation
     - Generate CSV files locally
     - Load schema file with mysql -u root -p < schema.sql
-  - If you restart EC2 instance, re-install MySQL: 
-    - sudo yum -y remove mysql-server
-    - wget http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm 
-    - sudo yum localinstall mysql57-community-release-el7-8.noarch.rpm 
-    - sudo yum install mysql-community-server 
-    - sudo service mysqld start
+    - If you restart EC2 instance, re-install MySQL: 
+      - sudo yum -y remove mysql-server
+      - wget http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm 
+      - sudo yum localinstall mysql57-community-release-el7-8.noarch.rpm 
+      - sudo yum install mysql-community-server 
+      - sudo service mysqld start
 
 ### Data Generation and Seeding (10m restaurants, 100m reviews ~ 25gb)
 Generate CSV Data Locally:
@@ -57,14 +56,14 @@ Generate CSV Data Locally:
   - npm run write-reports
 Send Each File via SSH: (replace {data} and IP)
     - Compress into .zip if necessary
-    - sudo scp -i /Users/connorhoman/Desktop/mysql-sdc.pem reviewData{i}.csv ec2-user@18.220.157.200:~/reviewData{i}.csv
+    - sudo scp -i /Users/connorhoman/Desktop/db-sdc.pem reviewData{i}.csv.zip ec2-user@18.219.61.161:~/reviewData{i}.csv.zip
 Seed MySQL Database (replace {data} and path):
   - Unzip files if necessary
   - mysql -u root -p < database/schema.sql (or copy contents into shell)
   - Run following command for each file (diners, reviews x 10, restaurants, reports)
   - USE reviewsDB;
-    LOAD DATA LOCAL INFILE 'reviewData{i}.csv' 
-    INTO TABLE reviews
+    LOAD DATA LOCAL INFILE 'reportData.csv' 
+    INTO TABLE reports
     FIELDS TERMINATED BY ',' 
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES;
